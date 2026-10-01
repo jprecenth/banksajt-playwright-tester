@@ -10,24 +10,6 @@ export default function Home() {
     const [transaction, setTransaction] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false)
 
-
-    // async function handleBalance(event) {
-    //     event.preventDefault();
-
-    //     const data = localStorage.getItem("sessionToken")
-
-    //     const response = await fetch("http://localhost:3001/me/accounts", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({ "token": data })
-    //     })
-
-    //     const accountData = await response.json();
-    //     setBalance(accountData.amount);
-    // }
-
     async function handleTransaction(event) {
         event.preventDefault();
 
@@ -67,7 +49,7 @@ export default function Home() {
             </div>
             <main className="main-content flex min-h-0 flex-1">
                 <div className="sidebar w-max-[30%] flex-1 bg-pink-300 p-8 ">
-                    <div className="flex flex-col *:bg-pink-500 *:rounded-4xl *:p-3 *:m-3 *:text-black *:border-3 *:uppercase *:font-bold *:hover:bg-pink-400 *:hover:cursor-pointer *:hover:border-pink-600 text-center *:text-nowrap font-autour">
+                    <div className="flex flex-col *:bg-pink-500 *:rounded-4xl *:p-3 *:m-3 *:text-black *:border-3 *:uppercase *:font-bold *:hover:bg-pink-400 *:hover:cursor-pointer *:hover:border-pink-600 text-center *:text-nowrap font-autour w-43">
                         <Link
                             href={"/"}>
                             Startsida
@@ -80,63 +62,82 @@ export default function Home() {
                 </div>
                 <div className="content-section w-full">
                     <div className="hero-section flex flex-col relative w-full h-full p-8 items-start">
-                        <span className="text-3xl mb-1">
-                            Välkommen!
-                        </span>
-                        <p className="text-xl mb-2">
-                            Kontohantering:
+                        <p className="mb-5 *:p-1 text-md text-gray-600">
+                            <Link
+                                href={"/"}
+                                className="underline hover:cursor-pointer">
+                                Hem
+                            </Link>
+                            <span>/</span>
+                            <span>
+                                Konto
+                            </span>
                         </p>
-                        
-
-                            <div className="flex gap-2 bg-pink-200 p-4 mb-3 z-10">
-                                <span className="font-bold">
-                                    Aktuellt saldo:
-                                </span>
-                                <span>
-                                    {balance}
-                                </span>
-                                <span>
-                                    sek
-                                </span>
-                            </div>
-
-                            <form
-                                className="bg-pink-200 p-4 flex flex-col justify-center items-center z-10"
-                                onSubmit={handleTransaction}
-                            >
-                                <div className="flex gap-2 items-center mb-3">
-                                    <label
-                                        htmlFor="amount"
-                                        className="font-bold">
-                                        Summa
-                                    </label>
-                                    <input
-                                        name="amount"
-                                        id="amount"
-                                        placeholder="Mängd"
-                                        className="p-3 pl-5 border-3 rounded-4xl bg-white z-10"
-                                        type="number"
-                                    />
-                                </div>
+                        <p className="text-xl mb-2 font-autour font-black">
+                            Saldo
+                        </p>
+                        <div className="flex gap-2 p-4 mb-3 z-10">
+                            <span className="font-bold">
+                                Aktuellt saldo:
+                            </span>
+                            <span>
+                                {balance}
+                            </span>
+                            <span>
+                                sek
+                            </span>
+                        </div>
+                        <p className="text-xl mb-2 mt-5 font-autour font-black">
+                            Insättningar
+                        </p>
+                        <form
+                            className="p-4 flex justify-center items-center z-10 *:pr-4"
+                            onSubmit={handleTransaction}
+                        >
+                            <div className="flex gap-2 items-center">
+                                <label
+                                    htmlFor="amount"
+                                    className="font-bold">
+                                    Summa
+                                </label>
                                 <input
-                                    type="submit"
-                                    value="Sätt in"
-                                    className="bg-pink-500 rounded-4xl p-3 border-3 uppercase font-bold hover:bg-pink-400 hover:cursor-pointer hover:border-pink-600 z-10 font-autour w-fit"
+                                    name="amount"
+                                    id="amount"
+                                    placeholder="Mängd"
+                                    className="p-3 pl-5 border-3 rounded-4xl bg-white z-10"
+                                    type="number"
                                 />
-                                {showConfirmation && (
-                                    <p className="mt-2">
-                                        Insättning validerad! ✓
-                                    </p>
-                                )}
-                            </form>
-
-
+                            </div>
+                            <input
+                                type="submit"
+                                value="Sätt in"
+                                className="bg-pink-500 rounded-4xl p-3 border-3 uppercase font-bold hover:bg-pink-400 hover:cursor-pointer hover:border-pink-600 z-10 font-autour w-fit"
+                            />
+                            {showConfirmation && (
+                                <p className="mt-2">
+                                    Insättning validerad! ✓
+                                </p>
+                            )}
+                        </form>
+                        <p className="text-xl mb-2 mt-5 font-autour font-black">
+                            Transaktionshistorik
+                        </p>
+                        <div className="flex p-4">
+                            <span>
+                                Se din transaktionshistorik i detalj&nbsp;
+                            </span>
+                            <Link
+                                href={"/history"}
+                                className="underline hover:cursor-pointer">
+                                här
+                            </Link>.
+                        </div>
                         <img
                             alt="Piggy Bank Logo"
                             src="/logo.png"
                             width={300}
                             height={300}
-                            className="absolute left-8 bottom-8 opacity-20 z-1"
+                            className="absolute right-8 bottom-8 opacity-20 z-1 -scale-x-100"
                         />
                     </div>
                 </div>

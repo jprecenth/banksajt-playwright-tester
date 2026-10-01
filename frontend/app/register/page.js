@@ -59,9 +59,20 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="content-section w-full">
-                    <div className="w-full justify-items-center h-full relative">
+                    <div className="hero-section flex flex-col relative w-full h-full p-8 items-center">
+                        <p className="mb-5 *:p-1 text-md text-gray-600 self-start">
+                            <Link
+                                href={"/"}
+                                className="underline hover:cursor-pointer">
+                                Hem
+                            </Link>
+                            <span>/</span>
+                            <span>
+                                Skapa konto in
+                            </span>
+                        </p>
                         <form
-                            className="w-180 flex flex-col relative h-full p-40 items-center"
+                            className="w-180 flex flex-col relative h-full p-30 items-center"
                             onSubmit={(event) => {
                                 console.log("FORM SUBMIT");
                                 handleRegistration(event);
