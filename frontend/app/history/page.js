@@ -79,7 +79,7 @@ export default function History() {
                         <p className="text-xl mb-2 font-autour font-black">
                             Historik
                         </p>
-                        <div className="flex flex-col gap-2 p-4 mb-3 z-10">
+                        <div className="flex flex-col gap-2 p-4 mb-3 z-10 w-full">
                             {
                                 (transactions.length > 0)
                                     ?
@@ -95,8 +95,8 @@ export default function History() {
                                         <table className="mt-3">
                                             <thead>
                                                 <tr className="bg-pink-200 mr-2">
-                                                    <th>Tid & Datum</th>
-                                                    <th>Insättning</th>
+                                                    <th>Datum & Tid</th>
+                                                    <th>Insättning (SEK)</th>
                                                 </tr>
                                             </thead>
                                             <tbody
@@ -105,7 +105,7 @@ export default function History() {
                                                 {transactions.map(transaction => (
                                                     <tr key={transaction.transID}>
                                                         <td>
-                                                            {transaction.date_time}
+                                                            {new Date(transaction.date_time).toLocaleString("sv-SE")}
                                                         </td>
                                                         <td>
                                                             {transaction.transAmount}
