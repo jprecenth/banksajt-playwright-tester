@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function History() {
     const [transactions, setTransactions] = useState([]);
-    
+
     useEffect(() => {
         async function getTransactionData() {
             const data = localStorage.getItem("sessionToken")
@@ -81,7 +81,7 @@ export default function History() {
                         </p>
                         <div className="flex flex-col gap-2 p-4 mb-3 z-10">
                             {
-                                (message === "table")
+                                (transactions.length > 0)
                                     ?
                                     <>
                                         <span>
