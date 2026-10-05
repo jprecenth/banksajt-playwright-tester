@@ -58,7 +58,7 @@ app.post("/sessions", async (req, res) => {
         if (result.length > 0) {
             const userID = result[0].userID;
             const OTP = generateOTP();
-            const sql2 = 'INSERT INTO sessions (userID, token) VALUES (?, ?)';
+            const sql2 = 'INSERT INTO sessions (userID, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = VALUES(token)';
             const params2 = [userID, OTP];
             const result2 = await query(sql2, params2);
             console.log("result2:", result2)
