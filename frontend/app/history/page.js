@@ -1,39 +1,29 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function History() {
-    const message = "table"
+    const [transactions, setTransactions] = useState([]);
+    
+    useEffect(() => {
+        async function getTransactionData() {
+            const data = localStorage.getItem("sessionToken")
 
-    async function getTransactionData(event) {
-        const data = localStorage.getItem("sessionToken")
+            const response = await fetch("http://13.48.194.153:3001/history", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ "token": data })
+            })
 
-        const response = await fetch("http://13.48.194.153:3001/history", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ "token": data })
-        })
-
-        let table = document.getElementById("transactionTable")
-
-        if (response.ok) {
-            const transactionData = await response.json();
-            for (let row of transactionData) {
-                let transactionRow = document.createElement("tr");
-
-                let amountCell = document.createElement("td");
-                amountCell.textContent = row.transAmount
-
-                let dateCell = document.createElement("td");
-                dateCell.textContent = row.date_time;
-
-                transactionRow.append(amountCell, dateCell)
-
-                table.prepend(transactionRow)
+            if (response.ok) {
+                const transactionData = await response.json();
+                setTransactions(transactionData)
             }
         }
-    }
+        getTransactionData()
+    }, [])
 
     return (
         <div className="flex h-screen overflow-hidden flex-col font-sans dark:bg-black ">
@@ -111,12 +101,17 @@ export default function History() {
                                             </thead>
                                             <tbody
                                                 className="[&_th,&_td]:border [&_th,&_td]:border-separate [&_th,&_td]:border-pink-400 [&_th,&_td]:p-2 [&_th]:text-left max-w-200 w-full"
-                                                id="transactionTable"
                                             >
-                                                <tr>
-                                                    <td>December 25, 10:42</td>
-                                                    <td>10,000</td>
-                                                </tr>
+                                                {transactions.map(transaction => (
+                                                    <tr key={transaction.transID}>
+                                                        <td>
+                                                            {transaction.date_time}
+                                                        </td>
+                                                        <td>
+                                                            {transaction.transAmount}
+                                                        </td>
+                                                    </tr>
+                                                ))}
                                             </tbody>
                                         </table>
                                     </>

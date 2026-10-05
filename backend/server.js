@@ -188,7 +188,7 @@ app.post("/history", async (req, res) => {
 
         if (result.length > 0) {
             const userID = result[0].userID;
-            const sql2 = "SELECT * FROM history WHERE userID = ?";
+            const sql2 = "SELECT * FROM history WHERE userID = ? ORDER BY date_time DESC";
             const params2 = [userID];
             const result2 = await query(sql2, params2);
 
