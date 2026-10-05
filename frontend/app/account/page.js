@@ -1,15 +1,29 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
 
-
     const [balance, setBalance] = useState(0);
+    let localizedBalance = new Intl.NumberFormat('sv-SE', { style: 'decimal' }).format(balance);
 
-    const [transaction, setTransaction] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false)
 
+    useEffect(() => {
+        async function showBalance() {
+            const token = localStorage.getItem("sessionToken")
+            const response = await fetch(`http://13.48.194.153:3001/me/accounts?token=${token}`, {
+                method: "GET",
+            },
+            )
+            if (response.ok) {
+                const data = await response.json();
+                setBalance(data.amount)
+            }
+        }
+        showBalance()
+    }, [])
+    
     async function handleTransaction(event) {
         event.preventDefault();
 
@@ -27,9 +41,9 @@ export default function Home() {
 
         if (response.ok) {
             setShowConfirmation(true)
-            setBalance(prev => prev + Number(inputAmount.amount))
+            const data = await response.json();
+            setBalance(data.amount)
         }
-
     }
 
     return (
@@ -81,7 +95,7 @@ export default function Home() {
                                 Aktuellt saldo:
                             </span>
                             <span>
-                                {balance}
+                                {localizedBalance}
                             </span>
                             <span>
                                 sek
@@ -91,7 +105,7 @@ export default function Home() {
                             Insättningar
                         </p>
                         <form
-                            className="p-4 flex justify-center items-center z-10 *:pr-4"
+                            className="p-4 flex flex-col justify-center items-end z-10 *:pr-4"
                             onSubmit={handleTransaction}
                         >
                             <div className="flex gap-2 items-center">
@@ -107,12 +121,12 @@ export default function Home() {
                                     className="p-3 pl-5 border-3 rounded-4xl bg-white z-10"
                                     type="number"
                                 />
+                                <input
+                                    type="submit"
+                                    value="Sätt in"
+                                    className="bg-pink-500 rounded-4xl p-3 border-3 uppercase font-bold hover:bg-pink-400 hover:cursor-pointer hover:border-pink-600 z-10 font-autour w-fit"
+                                />
                             </div>
-                            <input
-                                type="submit"
-                                value="Sätt in"
-                                className="bg-pink-500 rounded-4xl p-3 border-3 uppercase font-bold hover:bg-pink-400 hover:cursor-pointer hover:border-pink-600 z-10 font-autour w-fit"
-                            />
                             {showConfirmation && (
                                 <p className="mt-2">
                                     Insättning validerad! ✓

@@ -78,6 +78,36 @@ app.post("/sessions", async (req, res) => {
 })
 
 
+app.get("/me/accounts", async (req, res) => {
+    const { token } = req.query;
+
+ try {
+        const sql = "SELECT * FROM sessions WHERE token = ?";
+        const result = await query(sql, [token]);
+
+        if (result.length > 0) {
+            const userID = result[0].userID;
+            const sql2 = "SELECT * FROM accounts WHERE userID = ?";
+            const params2 = [userID];
+            const result2 = await query(sql2, params2);
+
+            if (result2.length > 0) {
+                res.status(200).json({
+                    "amount": result2[0].amount
+                })
+            }
+        }
+        else {
+            console.log("Account not found")
+            res.status(401).send("Account could not be found.")
+        }
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).send("Account couldn't be verified")
+    }
+})
+
 app.post("/me/accounts", async (req, res) => {
     const { token } = req.body;
 
@@ -127,7 +157,7 @@ app.post("/me/accounts/transactions", async (req, res) => {
 
                 const sql3 = "SELECT amount FROM accounts WHERE userID = ?";
                 const result3 = await query(sql3, [userID]);
-                
+
                 res.status(200).json({
                     "amount": result3[0].amount
                 })
@@ -149,6 +179,37 @@ app.post("/me/accounts/transactions", async (req, res) => {
 })
 
 
+app.post("/history", async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        const sql = "SELECT * FROM sessions WHERE token = ?";
+        const result = await query(sql, [token])
+
+        if (result.length > 0) {
+            const userID = result[0].userID;
+            const sql2 = "SELECT * FROM history WHERE userID = ?";
+            const params2 = [userID];
+            const result2 = await query(sql2, params2);
+
+            if (result2.length > 0) {
+                res.status(200).json(result2)
+            }
+            else {
+                console.log("No transactions found")
+                res.status(204).send("The account has no transactions.")
+            }
+        }
+        else {
+            console.log("User ID not found")
+            res.status(401).send("User ID could not be found.")
+        }
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).send("Transaction data could not be reached.")
+    }
+})
 
 app.use(cors());
 app.use(bodyParser.json());
