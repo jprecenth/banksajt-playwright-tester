@@ -9,6 +9,10 @@ const port = process.env.PORT || 3001;
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get("/healthy", (req, res) => {
+    res.status(200).send("Port up and running.")
+});
+
 const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -21,7 +25,6 @@ async function query(sql, params) {
     const [results] = await pool.execute(sql, params);
     return results
 }
-
 
 app.post("/users", async (req, res) => {
     const { username, password } = req.body;
@@ -81,7 +84,7 @@ app.post("/sessions", async (req, res) => {
 app.get("/me/accounts", async (req, res) => {
     const { token } = req.query;
 
- try {
+    try {
         const sql = "SELECT * FROM sessions WHERE token = ?";
         const result = await query(sql, [token]);
 

@@ -11,7 +11,7 @@ export default function Home() {
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
 
-        const response = await fetch("http://13.48.194.153:3001/users", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function Home() {
                             </Link>
                             <span>/</span>
                             <span>
-                                Skapa konto in
+                                Skapa konto
                             </span>
                         </p>
                         <form

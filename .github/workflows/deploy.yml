@@ -27,6 +27,10 @@ jobs:
               working-directory: ./frontend
               run: npm ci
 
+            - name: Install Playwright Browsers
+              working-directory: ./frontend
+              run: npx playwright install chromium --with-deps
+
             - name: Run frontend lint
               working-directory: ./frontend
               run: npm run lint
@@ -46,10 +50,84 @@ jobs:
               working-directory: ./backend
               run: npm ci
     
+            - name: Run Vitest
+              working-directory: ./backend
+              run: npm run vitesting
+    
+    e2e: 
+      runs-on: ubuntu-latest
+      steps: 
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 22
+            cache: npm
+            cache-dependency-path: frontend/package-lock.json
+
+        - name: Install frontend dependencies
+          working-directory: ./frontend
+          run: npm ci
+
+        - name: Install Playwright Browsers
+          working-directory: ./frontend
+          run: npx playwright install chromium --with-deps
+
+        - name: Remove old docker environment
+          run: docker compose -f docker-compose-test.yml down -v
+          
+        - name: Run docker-compose-test.yml
+          run: docker compose -f docker-compose-test.yml up -d
+
+        - name: Check (and retry to check) that backend is running
+          run: |
+            ready=false
+            for i in {1..30}; do
+              if curl -f http://localhost:3001/healthy; then
+                echo "Backend is ready"
+                ready=true
+                break
+              fi
+
+              echo "Backend not ready yet..."
+              sleep 2
+            done
+            
+            if [ "$ready" != true ]; then
+              echo "Backend failed to become ready"
+              exit 1
+            fi
+
+        - name: Check (and retry to check) that frontend is running
+          run: |
+            ready=false
+            for i in {1..30}; do
+              if curl -f http://localhost:3000/; then
+                echo "Frontend is ready"
+                ready=true
+                break
+              fi
+
+              echo "Frontend not ready yet..."
+              sleep 2
+            done
+
+            if [ "$ready" != true ]; then
+              echo "Frontend failed to become ready"
+              exit 1
+            fi
+
+        - name: Run Playwright Tests
+          working-directory: ./frontend
+          run: npm test
+                     
+
     docker:
         runs-on: ubuntu-latest
-        needs: [ frontend_ci, backend_ci ]
-
+        needs: [ frontend_ci, backend_ci, e2e ]
+        if: github.event_name == 'push'
         steps:
             - name: Run Docker on EC2
               uses: appleboy/ssh-action@master
