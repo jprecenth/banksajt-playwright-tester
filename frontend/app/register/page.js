@@ -68,7 +68,7 @@ export default function Home() {
                             </Link>
                             <span>/</span>
                             <span>
-                                Skapa konto in
+                                Skapa konto
                             </span>
                         </p>
                         <form
