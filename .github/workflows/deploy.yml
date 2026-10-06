@@ -75,6 +75,9 @@ jobs:
           working-directory: ./frontend
           run: npx playwright install chromium --with-deps
 
+        - name: Remove old docker environment
+          run: docker compose -f docker-compose-test.yml down -v
+          
         - name: Run docker-compose-test.yml
           run: docker compose -f docker-compose-test.yml up -d
 
