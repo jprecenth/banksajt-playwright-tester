@@ -13,7 +13,7 @@ export default function History() {
 
             if (data) {
                 setSignedIn(true);
-                const response = await fetch("http://13.48.194.153:3001/history", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/history`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

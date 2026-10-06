@@ -22,7 +22,7 @@ export default function Account() {
 
             if (token) {
                 setSignedIn(true)
-                const response = await fetch(`http://13.48.194.153:3001/me/accounts?token=${token}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me/accounts?token=${token}`, {
                     method: "GET",
                 },
                 )
@@ -45,7 +45,7 @@ export default function Account() {
         if (validateAmount(amountNumber)) {
             const token = localStorage.getItem("sessionToken")
 
-            const response = await fetch("http://13.48.194.153:3001/me/accounts/transactions", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me/accounts/transactions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -26,7 +26,6 @@ async function query(sql, params) {
     return results
 }
 
-
 app.post("/users", async (req, res) => {
     const { username, password } = req.body;
 

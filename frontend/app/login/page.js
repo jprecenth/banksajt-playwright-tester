@@ -11,7 +11,7 @@ export default function Home() {
         const data = Object.fromEntries(formData);
 
 
-        const response = await fetch("http://13.48.194.153:3001/sessions", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sessions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -1,6 +1,14 @@
 import { test, expect } from '@playwright/test';
 
 test("Ett kontos transaktioner består efter ut- och inloggning", async ({ page }) => {
+    await page.goto("/register");
+
+    await page.locator("#username").fill("PTester1001");
+    await page.locator("#password").fill("PTester1001");
+    await page.getByText("Skapa konto!").click();
+
+    await expect(page.getByText("Konto skapat!")).toBeVisible();
+
     // 1. Testkontot kan logga in 
     await page.goto("/login");
     await page.locator("#username").fill("PTester1001");
@@ -30,6 +38,14 @@ test("Ett kontos transaktioner består efter ut- och inloggning", async ({ page 
 });
 
 test("Ogiltiga summor kan inte sättas in", async ({ page }) => {
+    await page.goto("/register");
+
+    await page.locator("#username").fill("PTester100010");
+    await page.locator("#password").fill("PTester100010");
+    await page.getByText("Skapa konto!").click();
+
+    await expect(page.getByText("Konto skapat!")).toBeVisible();
+
     // 1. Testkontot kan logga in 
     await page.goto("/login");
     await page.locator("#username").fill("PTester100010");
@@ -46,7 +62,7 @@ test("Ogiltiga summor kan inte sättas in", async ({ page }) => {
 
     // 4. Ursprungliga saldot består
     await expect(page.locator("#yourBalance")).toHaveText("0");
-    
+
     // 5. Historiken förblir tom
     await page.goto("/history");
     await expect(page.locator("#emptyText")).toContainText("Inga tidigare insättningar")
