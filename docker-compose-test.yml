@@ -16,6 +16,7 @@ services:
       DB_USER: bank_app
       DB_PASSWORD: bank_password
       DB_NAME: bank_test
+      JWT_SECRET: ${JWT_SECRET_TEST}
     depends_on:
       mysql-test:
         condition: service_healthy

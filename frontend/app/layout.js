@@ -1,5 +1,6 @@
-import { Lexend, Autour_One  } from "next/font/google";
+import { Lexend, Autour_One } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "./AuthContext";
 
 
 const autourOne = Autour_One({
@@ -24,7 +25,11 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${lexend.variable} ${autourOne.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }
