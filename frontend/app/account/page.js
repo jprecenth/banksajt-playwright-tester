@@ -1,7 +1,9 @@
 "use client";
+import { Header } from "@/components/header";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../AuthContext";
 
 function validateAmount(amountNumber) {
     return amountNumber > 0 && Number.isFinite(amountNumber)
@@ -15,15 +17,19 @@ export default function Account() {
 
     const [showConfirmation, setShowConfirmation] = useState(false)
     const [showError, setShowError] = useState(false);
+    const [JWTtoken, setJWTtoken] = useContext(AuthContext);
 
     useEffect(() => {
         async function showBalance() {
-            const token = localStorage.getItem("sessionToken")
 
-            if (token) {
+            if (JWTtoken) {
                 setSignedIn(true)
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me/accounts?token=${token}`, {
-                    method: "GET",
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me/accounts`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${JWTtoken}`
+                    }
                 },
                 )
                 if (response.ok) {
@@ -31,9 +37,12 @@ export default function Account() {
                     setBalance(data.amount)
                 }
             }
+            else {
+                setSignedIn(false)
+            }
         }
         showBalance()
-    }, [])
+    }, [JWTtoken])
 
     async function handleTransaction(event) {
         event.preventDefault();
@@ -43,14 +52,13 @@ export default function Account() {
         const amountNumber = Number(inputAmount.amount);
 
         if (validateAmount(amountNumber)) {
-            const token = localStorage.getItem("sessionToken")
-
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me/accounts/transactions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${JWTtoken}`
                 },
-                body: JSON.stringify({ "token": token, "amount": amountNumber })
+                body: JSON.stringify({ "amount": amountNumber })
             })
 
             if (response.ok) {
@@ -67,7 +75,7 @@ export default function Account() {
     const router = useRouter();
 
     function HandleSignOut() {
-        localStorage.removeItem("sessionToken");
+        setJWTtoken("")
         setSignedIn(false);
         router.push("/");
         return true
@@ -75,19 +83,7 @@ export default function Account() {
 
     return (
         <div className="flex h-screen overflow-hidden flex-col font-sans dark:bg-black ">
-            <div className="bg-pink-400 text-center h-20 items-center justify-center flex w-full shrink-0 gap-4">
-                <div className="text-4xl flex items-center font-bold font-autour">
-                    BankSajt.se
-                </div>
-                <div className="flex flex-col items-center">
-                    <p>
-                        Välkommen till BankSajt.se
-                    </p>
-                    <p className="italic text-sm">
-                        – Sajten för Din Bank
-                    </p>
-                </div>
-            </div>
+            <Header />
             <main className="main-content flex min-h-0 flex-1">
                 <div className="sidebar w-max-[30%] flex-1 bg-pink-300 p-8 ">
                     <div className="flex flex-col *:bg-pink-500 *:rounded-4xl *:p-3 *:m-3 *:text-black *:border-3 *:uppercase *:font-bold *:hover:bg-pink-400 *:hover:cursor-pointer *:hover:border-pink-600 text-center *:text-nowrap font-autour w-43">
@@ -179,9 +175,9 @@ export default function Account() {
                                         )}
                                         {showError && (
                                             <p className="flex flex-col">
-                                                <span 
-                                                className="mt-2 text-pink-700"
-                                                id="errorText">
+                                                <span
+                                                    className="mt-2 text-pink-700"
+                                                    id="errorText">
                                                     ✗ Otillåten insättning!
                                                 </span>
                                                 <span>

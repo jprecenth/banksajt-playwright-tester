@@ -1,24 +1,26 @@
 "use client";
+import { Header } from "@/components/header";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../AuthContext";
 
 export default function History() {
     const [transactions, setTransactions] = useState([]);
     const [signedIn, setSignedIn] = useState(false);
+    const [JWTtoken, setJWTtoken] = useContext(AuthContext);
 
     useEffect(() => {
         async function getTransactionData() {
-            const data = localStorage.getItem("sessionToken");
 
-            if (data) {
+            if (JWTtoken) {
                 setSignedIn(true);
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/history`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${JWTtoken}`
                     },
-                    body: JSON.stringify({ "token": data })
                 })
 
                 if (response.ok) {
@@ -28,12 +30,12 @@ export default function History() {
             }
         }
         getTransactionData()
-    }, [])
+    }, [JWTtoken])
 
     const router = useRouter();
 
     function HandleSignOut() {
-        localStorage.removeItem("sessionToken");
+        setJWTtoken("")
         setSignedIn(false);
         router.push("/");
         return true
@@ -41,19 +43,7 @@ export default function History() {
 
     return (
         <div className="flex h-screen overflow-hidden flex-col font-sans dark:bg-black ">
-            <div className="bg-pink-400 text-center h-20 items-center justify-center flex w-full shrink-0 gap-4">
-                <div className="text-4xl flex items-center font-bold font-autour">
-                    BankSajt.se
-                </div>
-                <div className="flex flex-col items-center">
-                    <p>
-                        Välkommen till BankSajt.se
-                    </p>
-                    <p className="italic text-sm">
-                        – Sajten för Din Bank
-                    </p>
-                </div>
-            </div>
+            <Header/>
             <main className="main-content flex min-h-0 flex-1">
                 <div className="sidebar w-max-[30%] flex-1 bg-pink-300 p-8 ">
                     <div className="flex flex-col *:bg-pink-500 *:rounded-4xl *:p-3 *:m-3 *:text-black *:border-3 *:uppercase *:font-bold *:hover:bg-pink-400 *:hover:cursor-pointer *:hover:border-pink-600 text-center *:text-nowrap font-autour w-43">

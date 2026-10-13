@@ -1,18 +1,21 @@
 import { test, expect } from '@playwright/test';
 
+const testUsernameA = "staticTest1";
+const testPasswordA = "Pa$$w0rd"
+
 test("Ett kontos transaktioner består efter ut- och inloggning", async ({ page }) => {
     await page.goto("/register");
 
-    await page.locator("#username").fill("PTester1001");
-    await page.locator("#password").fill("PTester1001");
+    await page.locator("#username").fill(testUsernameA);
+    await page.locator("#password").fill(testPasswordA);
     await page.getByText("Skapa konto!").click();
 
     await expect(page.getByText("Konto skapat!")).toBeVisible();
 
     // 1. Testkontot kan logga in 
     await page.goto("/login");
-    await page.locator("#username").fill("PTester1001");
-    await page.locator("#password").fill("PTester1001");
+    await page.locator("#username").fill(testUsernameA);
+    await page.locator("#password").fill(testPasswordA);
     await page.getByText("Logga in!").click();
     await expect(page).toHaveURL(/\/account$/);
 
@@ -27,8 +30,8 @@ test("Ett kontos transaktioner består efter ut- och inloggning", async ({ page 
     // 4. Kan logga ut och in igen
     await page.getByText("Logga ut").click();
     await page.goto("/login");
-    await page.locator("#username").fill("PTester1001");
-    await page.locator("#password").fill("PTester1001");
+    await page.locator("#username").fill(testUsernameA);
+    await page.locator("#password").fill(testPasswordB);
     await page.getByText("Logga in!").click();
     await expect(page).toHaveURL(/\/account$/);
 
@@ -37,19 +40,22 @@ test("Ett kontos transaktioner består efter ut- och inloggning", async ({ page 
 
 });
 
+const testUsernameB = "staticTest2";
+const testPasswordB = "Pa$$w0rd"
+
 test("Ogiltiga summor kan inte sättas in", async ({ page }) => {
     await page.goto("/register");
 
-    await page.locator("#username").fill("PTester100010");
-    await page.locator("#password").fill("PTester100010");
+    await page.locator("#username").fill(testUsernameB);
+    await page.locator("#password").fill(testPasswordB);
     await page.getByText("Skapa konto!").click();
 
     await expect(page.getByText("Konto skapat!")).toBeVisible();
 
     // 1. Testkontot kan logga in 
     await page.goto("/login");
-    await page.locator("#username").fill("PTester100010");
-    await page.locator("#password").fill("PTester100010");
+    await page.locator("#username").fill(testUsernameB);
+    await page.locator("#password").fill(testPasswordB);
     await page.getByText("Logga in!").click();
     await expect(page).toHaveURL(/\/account$/);
 
@@ -64,6 +70,7 @@ test("Ogiltiga summor kan inte sättas in", async ({ page }) => {
     await expect(page.locator("#yourBalance")).toHaveText("0");
 
     // 5. Historiken förblir tom
-    await page.goto("/history");
+    await page.getByText("här").click();
+    await expect(page).toHaveURL(/\/history$/);
     await expect(page.locator("#emptyText")).toContainText("Inga tidigare insättningar")
 });

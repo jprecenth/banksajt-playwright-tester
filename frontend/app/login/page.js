@@ -1,10 +1,13 @@
 "use client";
+import { Header } from "@/components/header";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "../AuthContext";
+import { useContext } from "react";
 
-export default function Home() {
+export default function Login() {
     const router = useRouter();
-
+    const [JWTtoken, setJWTtoken] = useContext(AuthContext)
     async function handleLogin(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -21,7 +24,7 @@ export default function Home() {
         const result = await response.json();
 
         if (response.ok) {
-            localStorage.setItem("sessionToken", result.token);
+            setJWTtoken(result.token);
             console.log("Signed in successfully!");
             router.push("/account")
         } else {
@@ -30,19 +33,7 @@ export default function Home() {
     }
     return (
         <div className="flex h-screen overflow-hidden flex-col font-sans dark:bg-black ">
-            <div className="bg-pink-400 text-center h-20 items-center justify-center flex w-full shrink-0 gap-4">
-                <div className="text-4xl flex items-center font-bold font-autour">
-                    BankSajt.se
-                </div>
-                <div className="flex flex-col items-center">
-                    <p>
-                        Välkommen till BankSajt.se
-                    </p>
-                    <p className="italic text-sm">
-                        – Sajten för Din Bank
-                    </p>
-                </div>
-            </div>
+            <Header/>
             <main className="main-content flex min-h-0 flex-1">
                 <div className="sidebar w-max-[30%] flex-1 bg-pink-300 p-8 ">
                     <div className="flex flex-col *:bg-pink-500 *:rounded-4xl *:p-3 *:m-3 *:text-black *:border-3 *:uppercase *:font-bold *:hover:bg-pink-400 *:hover:cursor-pointer *:hover:border-pink-600 text-center *:text-nowrap font-autour">

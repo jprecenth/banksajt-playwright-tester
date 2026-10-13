@@ -3,7 +3,7 @@ USE bank_test;
 CREATE TABLE IF NOT EXISTS users (
   userID INT UNSIGNED NOT NULL AUTO_INCREMENT,
   username VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
+  passwordHash VARCHAR(255) NOT NULL,
   -- created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (userID),
   UNIQUE KEY users_username_unique (username)
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS accounts (
 
 CREATE TABLE IF NOT EXISTS sessions (
   userID INT UNSIGNED NOT NULL,
-  token INT UNSIGNED NOT NULL,
+  token VARCHAR(512) NOT NULL,
   PRIMARY KEY (userID)
 );
 

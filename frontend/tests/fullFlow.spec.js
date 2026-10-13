@@ -1,19 +1,22 @@
 import { test, expect } from '@playwright/test';
 
+const testUsername = "fullFlowTest1";
+const testPassword = "Pa$$w0rd"
+
 test("Ny användare kan logga in, sätta in pengar, och se historik", async ({ page }) => {
     // 1. En ny användare kan registrera sig
     await page.goto("/register");
     
-    await page.locator("#username").fill("PTester10");
-    await page.locator("#password").fill("PTester10PW");
+    await page.locator("#username").fill(testUsername);
+    await page.locator("#password").fill(testPassword);
     await page.getByText("Skapa konto!").click();
     
     await expect(page.getByText("Konto skapat!")).toBeVisible();
     
     // 2. Logga in 
     await page.goto("/login");
-    await page.locator("#username").fill("PTester10");
-    await page.locator("#password").fill("PTester10PW");
+    await page.locator("#username").fill(testUsername);
+    await page.locator("#password").fill(testPassword);
     await page.getByText("Logga in!").click();
     await expect(page).toHaveURL(/\/account$/);
     
