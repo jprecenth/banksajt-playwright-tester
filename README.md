@@ -30,3 +30,4 @@
   6. Vilka hemligheter finns i ert projekt, och var ska de lagras lokalt, i GitHub Actions och på EC2?
      - Miljövariabler som förvaras lokalt i .env; EC2_HOST, EC2_SSH_KEY och EC2_USERNAME som förvaras som Secrets i GitHub Actions; användares lösenord förvaras inte oförändrade i databasen, utan lagras hashade.   
 - **Länk till en grön GitHub Actions-körning:**
+  https://github.com/jprecenth/banksajt-playwright-tester/actions/runs/38377579921
