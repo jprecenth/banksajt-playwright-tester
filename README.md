@@ -28,6 +28,6 @@
   5. Varför kan servern inte automatiskt veta att en JWT ska sluta gälla när användaren klickar på Logga ut?
      - För att JWT rensas från ett React State i frontend, och det delas inte med backend/servern. Token har en inbyggd tid för när den ska gå ut och sluta gälla. 
   6. Vilka hemligheter finns i ert projekt, och var ska de lagras lokalt, i GitHub Actions och på EC2?
-     - Miljövariabler som förvaras lokalt i .env; EC2_HOST, EC2_SSH_KEY och EC2_USERNAME som förvaras som Secrets i GitHub Actions; användares lösenord förvaras inte oförändrade i databasen, utan lagras hashade.   
+     - Miljövariabler som förvaras lokalt i .env; EC2_HOST, EC2_SSH_KEY och EC2_USERNAME samt JWT_SECRET_TEST (pga .gitignore som inte läser .env) som förvaras som Secrets i GitHub Actions; användares lösenord förvaras inte oförändrade i databasen, utan lagras hashade.   
 - **Länk till en grön GitHub Actions-körning:**
   https://github.com/jprecenth/banksajt-playwright-tester/actions/runs/38377579921
