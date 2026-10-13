@@ -79,7 +79,9 @@ jobs:
           run: docker compose -f docker-compose-test.yml down -v
           
         - name: Run docker-compose-test.yml
-          run: docker compose --env-file backend/.env -f docker-compose-test.yml up -d
+          env: 
+            JWT_SECRET_TEST: ${{ secrets.JWT_SECRET_TEST }} 
+          run: docker compose -f docker-compose-test.yml up -d
 
         - name: Debug Docker containers
           run: |
